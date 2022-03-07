@@ -7,6 +7,10 @@ import React from 'react';
 import { fetchQueryResultsFromURL } from '../api';
 
 const Preview = (props) => {
+  const {searchResults, setIsLoading, setSearchResults, setFeaturedResult} = props;
+  const info = searchResults.info;
+  const records = searchResults.records;
+
   /**
    * Destructure setSearchResults, setFeaturedResult, and setIsLoading from props
    * and also destructure info and records from props.searchResults
@@ -37,17 +41,34 @@ const Preview = (props) => {
     <header className="pagination">
       {/* This button should be disabled if nothing is set in info.prev, and should call fetchPage with info.prev when clicked */}
       <button 
-        disabled={} 
+        disabled={!info.prev} 
         className="previous"
-        onClick={}>Previous</button>
+        onClick={() => {fetchPage(info.prev)}}>Previous</button>
       {/* This button should be disabled if nothing is set in info.next, and should call fetchPage with info.next when clicked */}
       <button
-        disabled={}
+        disabled={!info.next}
         className="next"
-        onClick={}>Next</button>
+        onClick={() => {fetchPage(info.next)}}>Next</button>
     </header>
     <section className="results">
+      
       {
+        records.map((record,index) => <div
+        key= {index}
+        className = "object-preview"
+        onClick = {(event) => {
+          event.preventDefault();
+          setFeaturedResult(record)
+        }}>
+          {
+            record.primaryimageurl?  <img src={ record.primaryimageurl } alt={ record.description } /> : null
+          }
+          {record.title? <h3>{ record.title }</h3> : <h3>MISSING INFO</h3>}
+        </div>)
+
+
+
+
         /* Here we should map over the records, and render something like this for each one:
           <div  
             key={ index }
